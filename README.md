@@ -1,10 +1,10 @@
 ---
 title: Prompt Evaluator MVP — Documento Maestro
-version: 1.0.0
+version: 1.1.0
 status: draft
 last_updated: 2026-11-08
 authors:
-  - David Yurivilca - Arquitecto de Software
+  - David Yurivilca - Arquitecto Software
 scope: Define la visión, arquitectura compartida y guía de formatos de los dos MVP del proyecto.
 related_documents:
   - docs/MVP-01-constructor-guiado.md
