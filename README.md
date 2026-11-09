@@ -230,15 +230,29 @@ prompt-evaluator-mvp/
 
 ---
 
-## 6. Referencias a Documentos de Detalle
+## 6. Referencias a Documentos de Detalle y Documentación Técnica
+
+El proyecto cuenta con documentación específica dividida en dos grandes áreas: la arquitectura funcional de los MVP y la guía técnica de cada microservicio.
+
+### 6.1 Documentos de Arquitectura y MVP (Carpeta `docs/`)
 
 | Documento | Ruta | Contenido |
 |---|---|---|
 | **Maestro** | `README.md` | *(Este documento)* Visión general, arquitectura compartida, guía de formatos, estructura de repositorio. |
-| **MVP-01** | [`docs/MVP-01-constructor-guiado.md`](docs/MVP-01-constructor-guiado.md) | Detalle técnico del Constructor Guiado: formulario, ensamblado, contrato de API, lógica del motor de validación. |
-| **MVP-02** | [`docs/MVP-02-validador-libre.md`](docs/MVP-02-validador-libre.md) | Detalle técnico del Validador Libre: pegado de prompt, detección heurística de formato, auditoría, contrato de API. |
+| **MVP-01** | [`docs/MVP-01-constructor-guiado.md`](docs/MVP-01-constructor-guiado.md) | Detalle funcional del Constructor Guiado: formulario, ensamblado, contrato de API. |
+| **MVP-02** | [`docs/MVP-02-validador-libre.md`](docs/MVP-02-validador-libre.md) | Detalle funcional del Validador Libre: pegado de prompt, detección heurística, auditoría. |
 
-Ambos documentos de detalle **referencian explícitamente este documento maestro** para la guía de formatos (sección 4) y la arquitectura compartida (sección 2), evitando duplicación de información y garantizando que cualquier cambio en la guía de formatos se aplique de forma coherente a los dos MVP.
+### 6.2 Documentación Técnica por Microservicio
+
+Cada carpeta principal del código fuente cuenta con su propio `README.md` con instrucciones de despliegue, variables de entorno y arquitectura interna.
+
+| Microservicio | Ruta | Contenido |
+|---|---|---|
+| **Frontend** | [`frontend/README.md`](frontend/README.md) | Detalles de la UI en React, Tailwind, estructura de componentes y configuración de Vite/Nginx. |
+| **Backend (Gateway)** | [`backend-java/README.md`](backend-java/README.md) | Detalles del API Gateway, Spring Boot, WebClient, CORS y validación de contratos. |
+| **Motor de Validación** | [`validator-python/README.md`](validator-python/README.md) | Detalles de FastAPI, los SDKs (promptdoctor, etc.), y la lógica del agregador/fallback. |
+
+Ambos documentos de arquitectura **referencian explícitamente este documento maestro** para la guía de formatos (sección 4) y la arquitectura compartida (sección 2), evitando duplicación de información y garantizando que cualquier cambio se aplique de forma coherente.
 
 ---
 
