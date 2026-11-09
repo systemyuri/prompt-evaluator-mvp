@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: prompt-evaluator
+  jackson:
+    default-property-inclusion: non_null
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+validator:
+  python:
+    base-url: ${VALIDATOR_PYTHON_URL:http://localhost:8000}
+    timeout-ms: 5000

@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  validator-python:
+    build:
+      context: ./validator-python
+      dockerfile: Dockerfile
+    container_name: pe-validator-python
+    ports:
+      - "8000:8000"
+    environment:
+      - LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - pe-net
+
+  backend-java:
+    build:
+      context: ./backend-java
+      dockerfile: Dockerfile
+    container_name: pe-backend-java
+    ports:
+      - "8080:8080"
+    environment:
+      - VALIDATOR_PYTHON_URL=http://validator-python:8000
+    depends_on:
+      validator-python:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pe-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: pe-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend-java:
+        condition: service_healthy
+    networks:
+      - pe-net
+
+networks:
+  pe-net:
+    driver: bridge

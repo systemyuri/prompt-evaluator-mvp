@@ -1,0 +1,26 @@
+# Node
+node_modules/
+frontend/dist/
+*.log
+
+# Java
+backend-java/target/
+*.class
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+
+# Env
+.env
