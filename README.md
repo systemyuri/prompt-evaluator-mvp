@@ -260,8 +260,8 @@ Ambos documentos de detalle **referencian explícitamente este documento maestro
 
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
-| 1.1.0 | 2026-11-08 | Arquitectura de Solución | Actualización del diagrama de arquitectura a Mermaid para mejor renderizado y visualización. |
-| 1.0.0 | 2026-11-08 | Arquitectura de Solución | Versión inicial del documento maestro. Define visión, arquitectura, SDKs, guía de formatos y estructura de repositorio. |
+| 1.1.0 | 2026-11-08 | David Yurivilca | Actualización del diagrama de arquitectura a Mermaid para mejor renderizado y visualización. |
+| 1.0.0 | 2026-11-08 | David Yurivilca | Versión inicial del documento maestro. Define visión, arquitectura, SDKs, guía de formatos y estructura de repositorio. |
 
 ---
 
