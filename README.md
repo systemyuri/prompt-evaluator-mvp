@@ -4,7 +4,7 @@ version: 1.0.0
 status: draft
 last_updated: 2026-11-08
 authors:
-  - Arquitectura de Solución
+  - David Yurivilca - Arquitecto de Software
 scope: Define la visión, arquitectura compartida y guía de formatos de los dos MVP del proyecto.
 related_documents:
   - docs/MVP-01-constructor-guiado.md
@@ -50,34 +50,65 @@ Ambos proyectos están diseñados para ser **extensibles a una Fase 2 de ejecuci
 
 ## 2. Arquitectura Compartida (Alto Nivel)
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                         REACT (Frontend)                            │
-│  ┌─────────────────────┐          ┌─────────────────────────────┐  │
-│  │ MVP-01: Formulario  │          │ MVP-02: Área de texto libre │  │
-│  │ (Constructor Guiado)│          │ (Validador Libre)           │  │
-│  └─────────┬───────────┘          └──────────────┬──────────────┘  │
-└────────────┼──────────────────────────────────────┼────────────────┘
-             │                                      │
-             ▼                                      ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│              JAVA / SPRING BOOT (API Gateway + Orquestador)         │
-│  · PromptValidationController                                      │
-│  · DTOs de entrada/salida (Bean Validation)                         │
-│  · Servicio que consume el microservicio Python                     │
-└─────────────────────────────────┬───────────────────────────────────┘
-                                  │ HTTP (REST)
-                                  ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│              PYTHON / FASTAPI (Motor de Validación)                 │
-│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐  │
-│  │ promptdoctor    │ │ promptqc        │ │ promptclarity-sdk   │  │
-│  │ (linter estático│ │ (scoring rápido │ │ (250+ reglas de     │  │
-│  │  sin dependencias│ │  --fast)        │ │  calidad y riesgo)  │  │
-│  └─────────────────┘ └─────────────────┘ └─────────────────────┘  │
-│  · Unifica hallazgos en un JSON de respuesta estandarizado          │
-│  · Incluye recomendaciones de formato según modelo/tarea            │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    %% Capa Frontend
+    subgraph Frontend ["Capa Frontend (React + Vite)"]
+        direction TB
+        UI1["MVP-01: Constructor Guiado"]
+        UI2["MVP-02: Validador Libre"]
+        Shared["Componentes Compartidos<br/>(FormatSelector, TokenEstimator)"]
+        UI1 -.-> Shared
+        UI2 -.-> Shared
+    end
+
+    %% Capa Backend Java
+    subgraph Backend ["Capa Orquestadora (Java / Spring Boot)"]
+        direction TB
+        Controller["REST Controller<br/>(Bean Validation)"]
+        Service["Service / WebClient"]
+        Controller --> Service
+    end
+
+    %% Capa Python
+    subgraph PythonEngine ["Motor de Validación (Python / FastAPI)"]
+        direction TB
+        FastAPI["FastAPI Router"]
+        Aggregator["Aggregator<br/>(Unificación de Hallazgos)"]
+        FormatAdv["Format Advisor<br/>(Recomendaciones)"]
+        
+        subgraph SDKs ["SDKs Reutilizados (Offline / Rule-Only)"]
+            direction LR
+            PD["promptdoctor"]
+            PQ["promptqc"]
+            PC["promptclarity-sdk"]
+        end
+        
+        FastAPI --> Aggregator
+        Aggregator --> SDKs
+        Aggregator --> FormatAdv
+    end
+
+    %% Flujos de Comunicación
+    UI1 -- "Petición POST (JSON)" --> Controller
+    UI2 -- "Petición POST (JSON)" --> Controller
+    
+    Service -- "Petición HTTP REST" --> FastAPI
+    Aggregator -- "Respuesta Estructurada" --> Service
+    
+    Service -- "Respuesta (JSON)" --> UI1
+    Service -- "Respuesta (JSON)" --> UI2
+
+    %% Estilos de los nodos
+    classDef frontend fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
+    classDef backend fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#166534
+    classDef python fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#92400e
+    classDef sdk fill:#fef2f2,stroke:#ef4444,stroke-width:2px,color:#991b1b
+
+    class UI1,UI2,Shared frontend
+    class Controller,Service backend
+    class FastAPI,Aggregator,FormatAdv python
+    class PD,PQ,PC sdk
 ```
 
 **Decisión de diseño clave:** La lógica de validación reside en Python porque es el ecosistema donde existen librerías maduras y mantenidas para esta tarea (`promptdoctor`, `promptqc`, `promptclarity-sdk`). Java actúa como capa de contrato de API y orquestación, aprovechando Bean Validation para garantizar la integridad del JSON de entrada y dejando la puerta abierta a los Guardrails de LangChain4j para la Fase 2 de ejecución.
@@ -229,7 +260,7 @@ Ambos documentos de detalle **referencian explícitamente este documento maestro
 
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
-| 1.0.0 | 2026-11-08 | Arquitectura de Solución | Versión inicial del documento maestro. Define visión, arquitectura, SDKs, guía de formatos y estructura de repositorio. |
+| 1.0.0 | 2026-11-08 | David Yurivilca | Versión inicial del documento maestro. Define visión, arquitectura, SDKs, guía de formatos y estructura de repositorio. |
 
 ---
 
